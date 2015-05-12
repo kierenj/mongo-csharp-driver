@@ -897,7 +897,7 @@ namespace MongoDB.Bson.Serialization
             _creatorMaps.Clear();
             _creator = null;
             _declaredMemberMaps.Clear();
-            _discriminator = _classType.Name;
+            _discriminator = GetDefaultDiscriminator();
             _discriminatorIsRequired = false;
             _extraElementsMemberMap = null;
             _idMemberMap = null;
@@ -1199,6 +1199,12 @@ namespace MongoDB.Bson.Serialization
                     _declaredMemberMaps.Sort((x, y) => x.Order.CompareTo(y.Order));
                 }
             }
+        }
+
+        private string GetDefaultDiscriminator()
+        {
+            // always use this, otherwise OfType<X> or Where(o => o is X) expressions fail
+            return TypeNameDiscriminator.GetDiscriminator(_classType);
         }
 
         private void TryFindShouldSerializeMethod(BsonMemberMap memberMap)
