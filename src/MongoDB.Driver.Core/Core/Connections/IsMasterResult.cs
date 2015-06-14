@@ -47,6 +47,23 @@ namespace MongoDB.Driver.Core.Connections
 
         // properties
         /// <summary>
+        /// Gets the election identifier.
+        /// </summary>
+        public ElectionId ElectionId
+        {
+            get
+            {
+                BsonValue value;
+                if (_wrapped.TryGetValue("electionId", out value))
+                {
+                    return new ElectionId((ObjectId)value);
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether this instance is an arbiter.
         /// </summary>
         /// <value>
@@ -125,6 +142,23 @@ namespace MongoDB.Driver.Core.Connections
                 }
 
                 return Math.Max(MaxDocumentSize + 1024, 16000000);
+            }
+        }
+
+        /// <summary>
+        /// Gets the endpoint the server is claiming it is known as.
+        /// </summary>
+        public EndPoint Me
+        {
+            get
+            {
+                BsonValue value;
+                if (_wrapped.TryGetValue("me", out value))
+                {
+                    return EndPointHelper.Parse((string)value);
+                }
+
+                return null;
             }
         }
 
